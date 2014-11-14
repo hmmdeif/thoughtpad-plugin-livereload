@@ -1,5 +1,5 @@
 var Primus = require('primus'),
-    primusServer,
+    _primusServer,
     _thoughtpad;
 
 var init = function (thoughtpad) {
@@ -9,10 +9,11 @@ var init = function (thoughtpad) {
 },
 
 startServer = function *(server) {
-    if (server && !primusServer) {
-        primusServer = new Primus(server, {parser: 'JSON'});
 
-        primusServer.on('connection', function (spark) {
+    if (server && !_primusServer) {
+        _primusServer = new Primus(server, {parser: 'JSON'});
+
+        _primusServer.on('connection', function (spark) {
             console.log('Connected to a new client');
         });
     }
@@ -46,7 +47,13 @@ getBrowserScript = function () {
         })(); \
     ';
 
-}
+},
+
+shutdown = function () {
+    if (_primusServer) {
+        _primusServer.destroy();
+    }
+},
 
 addScripts = function *(obj) {
     var primusScript = "",
@@ -55,8 +62,8 @@ addScripts = function *(obj) {
         primusScriptName = 'primus';
 
     // If the primus server has been correctly initialised, then we can pass the contents (helps for tests if we lay it out this way)
-    if (primusServer) {
-        primusScript = primusServer.library();
+    if (_primusServer) {
+        primusScript = _primusServer.library();
     }
 
     // Add the script files to the current thoughtpad config jsbundle object
@@ -71,5 +78,6 @@ addScripts = function *(obj) {
 };
 
 module.exports = {
-    init: init
+    init: init,
+    shutdown: shutdown
 };
