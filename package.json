@@ -1,0 +1,29 @@
+{
+  "name": "thoughtpad-plugin-livereload",
+  "version": "0.0.1",
+  "description": "Thoughtpad plugin for enabling live reload on the browser for development",
+  "engines": {
+    "node": "0.11",
+    "npm": "1.4"
+  },
+  "repository" : { 
+    "type" : "git", 
+    "url" : "https://github.com/hmmdeif/thoughtpad-plugin-livereload.git"
+  },
+  "dependencies": {
+    "primus": "~2.4.5"
+  },
+  "devDependencies": {
+    "thoughtpad-plugin-manager": "git://github.com/hmmdeif/thoughtpad-plugin-manager.git#master",
+    "should": "~3.3.2",
+    "mocha": "~1.21.4",
+    "coveralls": "~2.11.2",
+    "istanbul-harmony": "~0.3.0",
+    "co-fs": "~1.2.0",
+    "co": "~3.1.0"
+  },
+  "main": "./src/main.js",
+  "scripts": {
+    "test": "node --harmony ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  }
+}
