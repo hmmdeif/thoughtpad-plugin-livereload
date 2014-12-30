@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Thoughtpad plugin for enabling live reload on the browser for development",
   "engines": {
-    "node": "0.11",
-    "npm": "1.4"
+    "node": "0.11.14",
+    "npm": "2.0.0"
   },
   "repository": {
     "type": "git",

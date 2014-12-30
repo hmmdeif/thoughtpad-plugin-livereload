@@ -18,7 +18,7 @@ var thoughtpad = man.registerPlugins([livereload]);
 thoughtpad.subscribe("javascript-precompile-complete", function (data) {
     console.log("Live reload code object here"); 
 });
-thoughtpad.notify("javascript-precompile-request", {});
+yield thoughtpad.notify("javascript-precompile-request", {});
 ```
 
 ## Tests
