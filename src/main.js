@@ -50,6 +50,7 @@ getBrowserScript = function () {
 shutdown = function () {
     if (_primusServer) {
         _primusServer.destroy();
+        _primusServer = null;
     }
 },
 
@@ -61,18 +62,18 @@ addScripts = function *(obj) {
 
     // If the primus server has been correctly initialised, then we can pass the contents (helps for tests if we lay it out this way)
     if (_primusServer) {
-        primusScript = _primusServer.library();
-    }
+        primusScript = _primusServer.library();    
 
-    // Add the script files to the current thoughtpad config jsbundle object
-    for (bundleName in obj.thoughtpad.config.jsbundle) {
-        obj.thoughtpad.config.jsbundle[bundleName].push(browserScriptName);
-        obj.thoughtpad.config.jsbundle[bundleName].push(primusScriptName);
-    }
+        // Add the script files to the current thoughtpad config jsbundle object
+        for (bundleName in obj.thoughtpad.config.jsbundle) {
+            obj.thoughtpad.config.jsbundle[bundleName].push(primusScriptName);
+            obj.thoughtpad.config.jsbundle[bundleName].push(browserScriptName);        
+        }
 
-    // If we yield twice, then two objects will be added to the scripts in total
-    yield obj.thoughtpad.notify("javascript-precompile-complete", { name: browserScriptName, contents: getBrowserScript(), ext: 'js' });
-    yield obj.thoughtpad.notify("javascript-precompile-complete", { name: primusScriptName, contents: primusScript, ext: 'js' });
+        // If we yield twice, then two objects will be added to the scripts in total
+        yield obj.thoughtpad.notify("javascript-precompile-complete", { name: browserScriptName, contents: getBrowserScript(), ext: 'js' });
+        yield obj.thoughtpad.notify("javascript-precompile-complete", { name: primusScriptName, contents: primusScript, ext: 'js' });
+    }
 };
 
 module.exports = {

@@ -52,8 +52,14 @@ describe("live reload plugin", function () {
         });
 
         co(function *() {
+            server = http.createServer();
+            server.listen();
+            yield thoughtpad.notify("initialise-complete", server);
+
             yield thoughtpad.notify("javascript-precompile-request", {});
             count.should.equal(2);
+            app.shutdown();
+            server.close();
             done();
         })();
     });
@@ -80,8 +86,7 @@ describe("live reload plugin", function () {
 
         co(function *() {
             yield thoughtpad.notify("javascript-precompile-request", {});
-            thoughtpad.config.jsbundle.one.should.eql(['stuff', 'primus-browser', 'primus']);
-            thoughtpad.config.jsbundle.one.should.eql(['stuff', 'primus-browser', 'primus']);
+            thoughtpad.config.jsbundle.one.should.eql(['stuff']);
             app.shutdown();
             done();
         })();
@@ -113,8 +118,7 @@ describe("live reload plugin", function () {
             yield thoughtpad.notify("initialise-complete", server);
 
             yield thoughtpad.notify("javascript-precompile-request", {});
-            thoughtpad.config.jsbundle.one.should.eql(['stuff', 'primus-browser', 'primus']);
-            thoughtpad.config.jsbundle.one.should.eql(['stuff', 'primus-browser', 'primus']);
+            thoughtpad.config.jsbundle.one.should.eql(['stuff', 'primus', 'primus-browser']);
             app.shutdown();
             server.close();
             done();
