@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hmmdeif/thoughtpad-plugin-livereload.git"
+    "url": "https://github.com/thoughtpad/thoughtpad-plugin-livereload.git"
   },
   "dependencies": {
     "primus": "~2.4.5",
     "ws": "~0.4.32"
   },
   "devDependencies": {
-    "thoughtpad-plugin-manager": "git://github.com/hmmdeif/thoughtpad-plugin-manager.git#master",
+    "thoughtpad-plugin-manager": "git://github.com/thoughtpad/thoughtpad-plugin-manager.git#master",
     "should": "~3.3.2",
     "mocha": "~1.21.4",
     "coveralls": "~2.11.2",
