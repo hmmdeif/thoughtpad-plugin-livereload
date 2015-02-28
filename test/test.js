@@ -28,7 +28,7 @@ describe("live reload plugin", function () {
         co(function *() {
             yield thoughtpad.notify("javascript-precompile-request", {});
             done();
-        })();
+        }).catch(done);
     });
 
     it("should yield twice with each primus script", function (done) {
@@ -61,7 +61,7 @@ describe("live reload plugin", function () {
             app.shutdown();
             server.close();
             done();
-        })();
+        }).catch(done);
     });
 
     it("should not put in primus script if no http server is running", function (done) {
@@ -89,7 +89,7 @@ describe("live reload plugin", function () {
             thoughtpad.config.jsbundle.one.should.eql(['stuff']);
             app.shutdown();
             done();
-        })();
+        }).catch(done);
     });
 
     it("should put the primus script into the config", function (done) {
@@ -123,7 +123,7 @@ describe("live reload plugin", function () {
             server.close();
             done();
             
-        })();
+        }).catch(done);
     });
 
 

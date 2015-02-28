@@ -1,30 +1,30 @@
 {
   "name": "thoughtpad-plugin-livereload",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Thoughtpad plugin for enabling live reload on the browser for development",
   "engines": {
-    "node": "0.11.14",
-    "npm": "2.0.0"
+    "node": ">= 0.12.0",
+    "iojs": ">= 1.4.1",
+    "npm": "2.6.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/thoughtpad/thoughtpad-plugin-livereload.git"
   },
   "dependencies": {
-    "primus": "~2.4.5",
-    "ws": "~0.4.32"
+    "primus": "~2.4.12"
   },
   "devDependencies": {
     "thoughtpad-plugin-manager": "git://github.com/thoughtpad/thoughtpad-plugin-manager.git#master",
-    "should": "~3.3.2",
-    "mocha": "~1.21.4",
+    "should": "~5.0.1",
+    "mocha": "~2.1.0",
     "coveralls": "~2.11.2",
-    "istanbul-harmony": "~0.3.0",
+    "istanbul-harmony": "~0.3.1",
     "co-fs": "~1.2.0",
-    "co": "~3.1.0"
+    "co": "~4.4.0"
   },
   "main": "./src/main.js",
   "scripts": {
-    "test": "node --harmony ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "test": "iojs --harmony ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   }
 }
