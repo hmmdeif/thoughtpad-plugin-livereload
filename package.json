@@ -12,7 +12,8 @@
     "url": "https://github.com/thoughtpad/thoughtpad-plugin-livereload.git"
   },
   "dependencies": {
-    "primus": "~2.4.12"
+    "primus": "~2.4.12",
+    "ws": "^0.7.1"
   },
   "devDependencies": {
     "thoughtpad-plugin-manager": "git://github.com/thoughtpad/thoughtpad-plugin-manager.git#master",
