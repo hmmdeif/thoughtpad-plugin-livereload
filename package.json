@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "primus": "~2.4.12",
-    "ws": "^0.7.1"
+    "ws": "^0.7.1",
+    "chokidar": "~1.0.1"
   },
   "devDependencies": {
     "thoughtpad-plugin-manager": "git://github.com/thoughtpad/thoughtpad-plugin-manager.git#master",

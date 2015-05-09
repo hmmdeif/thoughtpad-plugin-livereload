@@ -1,20 +1,74 @@
 var Primus = require('primus'),
+    chokidar = require('chokidar'),
+    co = require('co'),
+    _watcher,
+    canCompile = false,
+    _hostnames = [],
     _primusServer;
 
 var init = function (thoughtpad) {
     thoughtpad.subscribe("javascript-precompile-request", addScripts);
     thoughtpad.subscribe("initialise-complete", startServer);
+    thoughtpad.subscribe("compile-complete", notifyClients);
 },
 
-startServer = function *(server) {
+startServer = function *(obj) {
 
-    if (server && !_primusServer) {
-        _primusServer = new Primus(server, {parser: 'JSON'});
+    canCompile = false;
+    if (obj.server && !_primusServer) {
+        _primusServer = new Primus(obj.server, {parser: 'JSON'});
 
         _primusServer.on('connection', function (spark) {
-            console.log('Connected to a new client');
+            //console.log('Connected to a new client');
         });
     }
+
+    if (obj.server && !_watcher) {
+        _watcher = chokidar.watch(obj.thoughtpad.config.srcLocation + "/**", {
+            ignored: '**/pre_out*',
+            ignorePermissionErrors: true
+        });
+
+        _watcher.on('all', function (event, path) {
+            var i = 0,
+                len = _hostnames.length,
+                found = false,
+                hostname;
+
+            if (canCompile) {
+                for (i; i < len; i++) {
+                    if (path.indexOf(_hostnames[i]) > -1) {
+                        found = true;
+                        hostname = _hostnames[i];
+                    }
+                }
+
+                if (found) {
+                    canCompile = false;          
+                    co(function *() {      
+                        yield obj.compile(obj.server, obj.cache, obj.mode, hostname);
+                    });
+                }
+            }
+
+        }).on('error', function (error) {
+            console.log(error);
+        }).on('ready', function () {
+        });
+
+         _hostnames.push(obj.hostname);
+
+    } else if (obj.server && _watcher) {
+        if (_hostnames.indexOf(obj.hostname) < 0) {
+            _watcher.add(obj.thoughtpad.config.srcLocation + "/**");
+            _hostnames.push(obj.hostname);
+        }
+    }
+},
+
+notifyClients = function *() {
+    _primusServer.write('compileComplete');
+    canCompile = true;
 },
 
 getBrowserScript = function () {

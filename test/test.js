@@ -54,7 +54,7 @@ describe("live reload plugin", function () {
         co(function *() {
             server = http.createServer();
             server.listen();
-            yield thoughtpad.notify("initialise-complete", server);
+            yield thoughtpad.notify("initialise-complete", {server: server, thoughtpad: {config: {}}});
 
             yield thoughtpad.notify("javascript-precompile-request", {});
             count.should.equal(2);
@@ -115,7 +115,7 @@ describe("live reload plugin", function () {
         co(function *() {
             server = http.createServer();
             server.listen();
-            yield thoughtpad.notify("initialise-complete", server);
+            yield thoughtpad.notify("initialise-complete", {server: server, thoughtpad: {config: {}}});
 
             yield thoughtpad.notify("javascript-precompile-request", {});
             thoughtpad.config.jsbundle.one.should.eql(['stuff', 'primus', 'primus-browser']);
