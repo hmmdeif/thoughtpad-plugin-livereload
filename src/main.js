@@ -1,5 +1,6 @@
 var Primus = require('primus'),
     chokidar = require('chokidar'),
+    http = require('http'),
     co = require('co'),
     _watcher,
     canCompile = false,
@@ -15,15 +16,11 @@ var init = function (thoughtpad) {
 startServer = function *(obj) {
 
     canCompile = false;
-    if (obj.server && !_primusServer) {
-        _primusServer = new Primus(obj.server, {parser: 'JSON'});
-
-        _primusServer.on('connection', function (spark) {
-            //console.log('Connected to a new client');
-        });
+    if (!_primusServer) {
+        _primusServer = Primus.createServer(function connection (spark) {}, {port: 8080, parser: 'JSON', transformer: 'websockets'});
     }
 
-    if (obj.server && !_watcher) {
+    if (!_watcher) {
         _watcher = chokidar.watch(obj.thoughtpad.config.srcLocation + "/**", {
             ignored: '**/pre_out*',
             ignorePermissionErrors: true
@@ -44,9 +41,9 @@ startServer = function *(obj) {
                 }
 
                 if (found) {
-                    canCompile = false;          
-                    co(function *() {      
-                        yield obj.compile(obj.server, obj.cache, obj.mode, hostname);
+                    canCompile = false;
+                    co(function *() {
+                        yield obj.compile(obj.mode, hostname);
                     });
                 }
             }
@@ -56,9 +53,9 @@ startServer = function *(obj) {
         }).on('ready', function () {
         });
 
-         _hostnames.push(obj.hostname);
+        _hostnames.push(obj.hostname);
 
-    } else if (obj.server && _watcher) {
+    } else if (_watcher) {
         if (_hostnames.indexOf(obj.hostname) < 0) {
             _watcher.add(obj.thoughtpad.config.srcLocation + "/**");
             _hostnames.push(obj.hostname);
@@ -74,7 +71,7 @@ notifyClients = function *() {
 getBrowserScript = function () {
     return ' \
         (function() { \
-            var primus = Primus.connect(); \
+            var primus = Primus.connect("ws://localhost:8080"); \
             primus.on("data", function (data) { \
                 if (data === "compileComplete") { \
                     document.location.reload(); \
@@ -116,12 +113,12 @@ addScripts = function *(obj) {
 
     // If the primus server has been correctly initialised, then we can pass the contents (helps for tests if we lay it out this way)
     if (_primusServer) {
-        primusScript = _primusServer.library();    
+        primusScript = _primusServer.library();
 
         // Add the script files to the current thoughtpad config jsbundle object
         for (bundleName in obj.thoughtpad.config.jsbundle) {
             obj.thoughtpad.config.jsbundle[bundleName].push(primusScriptName);
-            obj.thoughtpad.config.jsbundle[bundleName].push(browserScriptName);        
+            obj.thoughtpad.config.jsbundle[bundleName].push(browserScriptName);
         }
 
         // If we yield twice, then two objects will be added to the scripts in total

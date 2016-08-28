@@ -16,10 +16,12 @@ var man = require('thoughtpad-plugin-manager'),
 
 var thoughtpad = man.registerPlugins([livereload]);
 thoughtpad.subscribe("javascript-precompile-complete", function (data) {
-    console.log("Live reload code object here"); 
+    console.log("Live reload code object here");
 });
 yield thoughtpad.notify("javascript-precompile-request", {});
 ```
+
+N.B. This plugin is for local development only and therefore will connect by default to `ws:\\localhost:8080` and send updates to the browser that way. In production the thoughtpad application should be used to build the sites when it needs to, rather than to listen for the changes.
 
 ## Tests
 

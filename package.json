@@ -12,8 +12,8 @@
     "url": "https://github.com/thoughtpad/thoughtpad-plugin-livereload.git"
   },
   "dependencies": {
-    "primus": "~2.4.12",
-    "ws": "^0.7.1",
+    "primus": "~6.0.2",
+    "ws": "1.1.x",
     "chokidar": "~1.0.1"
   },
   "devDependencies": {
