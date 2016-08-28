@@ -4,7 +4,6 @@
   "description": "Thoughtpad plugin for enabling live reload on the browser for development",
   "engines": {
     "node": ">= 0.12.0",
-    "iojs": ">= 1.4.1",
     "npm": "2.6.0"
   },
   "repository": {
